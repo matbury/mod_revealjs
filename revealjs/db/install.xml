@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="mod/revealjs/db" VERSION="20120122" COMMENT="XMLDB file for Page module"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="revealjs" COMMENT="Each record is one revealjs and its config data">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="intro" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="autoslide" TYPE="char" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="backgroundtransition" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="default" SEQUENCE="false"/>
+        <FIELD NAME="center" TYPE="char" LENGTH="6" NOTNULL="false" DEFAULT="true" SEQUENCE="false"/>
+        <FIELD NAME="controls" TYPE="char" LENGTH="6" NOTNULL="false" DEFAULT="true" SEQUENCE="false"/>
+        <FIELD NAME="display" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="displayoptions" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="height" TYPE="char" LENGTH="4" NOTNULL="true" DEFAULT="720" SEQUENCE="false"/>
+        <FIELD NAME="history" TYPE="char" LENGTH="6" NOTNULL="false" DEFAULT="true" SEQUENCE="false"/>
+        <FIELD NAME="keyboard" TYPE="char" LENGTH="6" NOTNULL="false" DEFAULT="true" SEQUENCE="false"/>
+        <FIELD NAME="looped" TYPE="char" LENGTH="6" NOTNULL="false" DEFAULT="true" SEQUENCE="false"/>
+        <FIELD NAME="margin" TYPE="char" LENGTH="7" NOTNULL="true" DEFAULT="0.1" SEQUENCE="false"/>
+        <FIELD NAME="maxscale" TYPE="char" LENGTH="7" NOTNULL="true" DEFAULT="1.0" SEQUENCE="false"/>
+        <FIELD NAME="minscale" TYPE="char" LENGTH="7" NOTNULL="true" DEFAULT="0.2" SEQUENCE="false"/>
+        <FIELD NAME="mousewheel" TYPE="char" LENGTH="6" NOTNULL="false" DEFAULT="true" SEQUENCE="false"/>
+        <FIELD NAME="presentation" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="progress" TYPE="char" LENGTH="6" NOTNULL="false" DEFAULT="true" SEQUENCE="false"/>
+        <FIELD NAME="overview" TYPE="char" LENGTH="6" NOTNULL="false" DEFAULT="true" SEQUENCE="false"/>
+        <FIELD NAME="revision" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="incremented when after each file changes, solves browser caching issues"/>
+        <FIELD NAME="rtl" TYPE="char" LENGTH="6" NOTNULL="false" DEFAULT="false" SEQUENCE="false"/>
+        <FIELD NAME="theme" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="default" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="touch" TYPE="char" LENGTH="6" NOTNULL="false" DEFAULT="true" SEQUENCE="false"/>
+        <FIELD NAME="transition" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="default" SEQUENCE="false"/>
+        <FIELD NAME="transitionspeed" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="default" SEQUENCE="false"/>
+        <FIELD NAME="width" TYPE="char" LENGTH="4" NOTNULL="true" DEFAULT="1280" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>
