@@ -58,11 +58,13 @@ require_once($CFG->libdir . '/completionlib.php');
 $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
 
-//$PAGE->set_url('/mod/revealjs/view.php', array('id' => $cm->id));
+/*
+// Don't use Moodle's page renderer
+$PAGE->set_url('/mod/revealjs/view.php', array('id' => $cm->id));
 
-//$options = empty($revealjs->displayoptions) ? array() : unserialize($revealjs->displayoptions);
+$options = empty($revealjs->displayoptions) ? array() : unserialize($revealjs->displayoptions);
 
-/*if ($inpopup and $revealjs->display == RESOURCELIB_DISPLAY_POPUP) {
+if ($inpopup and $revealjs->display == RESOURCELIB_DISPLAY_POPUP) {
     $PAGE->set_pagelayout('popup');
     $PAGE->set_title($course->shortname.': '.$revealjs->name);
     if (!empty($options['printheading'])) {
@@ -70,127 +72,56 @@ $completion->set_module_viewed($cm);
     } else {
         $PAGE->set_heading('');
     }
-    //echo $OUTPUT->header();
+    echo $OUTPUT->header();
 
 } else {
     $PAGE->set_title($course->shortname.': '.$revealjs->name);
     $PAGE->set_heading($course->fullname);
     $PAGE->set_activity_record($revealjs);
-    //echo $OUTPUT->header();
+    echo $OUTPUT->header();
 
     if (!empty($options['printheading'])) {
-        //echo $OUTPUT->heading(format_string($revealjs->name), 2, 'main', 'revealjsheading');
+        echo $OUTPUT->heading(format_string($revealjs->name), 2, 'main', 'revealjsheading');
     }
 }
 
 if (!empty($options['printintro'])) {
     if (trim(strip_tags($revealjs->intro))) {
-        //echo $OUTPUT->box_start('mod_introbox', 'revealjsintro');
-        //echo format_module_intro('revealjs', $revealjs, $cm->id);
-        //echo $OUTPUT->box_end();
+        echo $OUTPUT->box_start('mod_introbox', 'revealjsintro');
+        echo format_module_intro('revealjs', $revealjs, $cm->id);
+        echo $OUTPUT->box_end();
     }
-}*/
+}
 
-/*$content = file_rewrite_pluginfile_urls($revealjs->content, 'pluginfile.php', $context->id, 'mod_revealjs', 'content', $revealjs->revision);
+$content = file_rewrite_pluginfile_urls($revealjs->content, 'pluginfile.php', $context->id, 'mod_revealjs', 'content', $revealjs->revision);
 $formatoptions = new stdClass;
 $formatoptions->noclean = true;
 $formatoptions->overflowdiv = true;
 $formatoptions->context = $context;
 $content = format_text($content, $revealjs->contentformat, $formatoptions);
-//echo $content;
-//echo $OUTPUT->box($content, "generalbox center clearfix");*/
+echo $content;
+echo $OUTPUT->box($content, "generalbox center clearfix");
+echo $OUTPUT->footer();
+ */
 
-$revealjs->presentation = file_get_contents($CFG->wwwroot.'/mod/revealjs/content.php/aaaaa/matbury/hello_world/slideshow.html');
-
+// Load HTML presentation file
+$revealjs->presentation = file_get_contents($CFG->dataroot.$CFG->revealjs_content_dir.$revealjs->presentation);
+// Replace URLs to embedded media in moodledata in HTML presentation file
 $revealjs->presentation = str_replace('src="aaaaa/', 'src="'.$CFG->wwwroot.'/mod/revealjs/content.php/aaaaa/', $revealjs->presentation);
 
-//$strlastmodified = get_string("lastmodified");
-//echo "<div class=\"modified\">$strlastmodified: ".userdate($revealjs->timemodified)."</div>";
-
-//echo $OUTPUT->footer();
-
-//$revealjs = new stdClass();
-//$revealjs->name = 'My first reveal.js slide show.';
-//$revealjs->intro = 'This is a short description or subheading of the presentation.';
-//$themes = array('beige.css', 'default.css', 'moon.css', 'right.css', 'serif.css', 'simple.css', 'sky.css', 'solarized.css');
-//$revealjs->theme = $themes[rand(0,count($themes) - 1)];
-
-/**
- * Configuration
- */
-// Layout --------------------------------------------------------------------//
-// The "normal" size of the presentation, aspect ratio will be preserved
-// when the presentation is scaled to fit different resolutions. Can be
-// specified using percentage units.
-/*$revealjs->width = '1280';
-$revealjs->height = '720';
-
-// Factor of the display size that should remain empty around the content
-$revealjs->margin = '0.1';
-
-// Bounds for smallest/largest possible scale to apply to content
-$revealjs->minscale = '0.2';
-$revealjs->maxscale = '1.0';
-
-// Behaviour -----------------------------------------------------------------//
-// Display controls in the bottom right corner
-$revealjs->controls = 'true';
-
-// Display a presentation progress bar
-$revealjs->progress = 'true';
-
-// Push each slide change to the browser history
-$revealjs->history = 'true';
-
-// Enable keyboard shortcuts for navigation
-$revealjs->keyboard = 'true';
-
-// Enable touch events for navigation
-$revealjs->touch = 'true';
-
-// Enable the slide overview mode
-$revealjs->overview = 'true';
-
-// Vertical centering of slides
-$revealjs->center = 'true';
-
-// Loop the presentation
-$revealjs->loop = 'true';
-
-// Change the presentation direction to be RTL
-$revealjs->rtl = 'false';
-
-// Number of milliseconds between automatically proceeding to the
-// next slide, disabled when set to 0, this value can be overwritten
-// by using a data-autoslide attribute on your slides
-$revealjs->autoslide = '0';
-
-// Enable slide navigation via mouse wheel
-$revealjs->mousewheel = 'true';
-
-// Transition style
-$transitions = array('default', 'cube', 'page', 'concave', 'zoom', 'linear', 'fade', 'none');
-$revealjs->transition = $transitions[rand(0,count($transitions) - 1)];
-
-// Transition speed
-$transitionspeeds = array('default', 'fast', 'slow');
-$revealjs->transitionspeed = $transitionspeeds[rand(0,count($transitionspeeds) - 1)];;
-
-// Transition style for full page backgrounds
-$bg_transitions = array('default', 'linear', 'none');
-$revealjs->backgroundtransition = $bg_transitions[rand(0,count($bg_transitions) - 1)];*/
-
-// URL to presentations and media directories
-$revealjs->contentdir = $CFG->wwwroot.'/mod/revealjs/content.php/';
-
 ?>
+
 <!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <title><?php echo $revealjs->name; ?></title>
-    <meta name="description" content="A reveal.js presentation using the Moodle 2.x Presentation module by Matt Bury matbury.com">
-    <meta name="author" content="Moodle">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="<?php echo $revealjs->name; ?>" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <meta name="last-modified" content="<?php echo userdate($revealjs->timemodified); ?>">
+    <meta name="last-modified-timestamp" content="<?php echo $revealjs->timemodified; ?>">
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -209,10 +140,12 @@ $revealjs->contentdir = $CFG->wwwroot.'/mod/revealjs/content.php/';
 </head>
 <body>
     <div class="reveal">
+        
         <!-- Any section element inside of this container is displayed as a slide -->
         <div class="slides">
             <?php echo $revealjs->presentation; ?>
         </div>
+        
     </div>
     <script src="lib/js/head.min.js"></script>
     <script src="js/reveal.min.js"></script>
@@ -291,3 +224,4 @@ $revealjs->contentdir = $CFG->wwwroot.'/mod/revealjs/content.php/';
     </script>
 </body>
 </html>
+?>
