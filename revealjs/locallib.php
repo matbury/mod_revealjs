@@ -80,13 +80,13 @@ function revealjs_get_themes() {
 }
 
 function revealjs_get_transitions() {
-    return array('default', 'cube', 'page', 'concave', 'zoom', 'linear', 'fade', 'none');
+    return array('default' => 'default', 'cube' => 'cube', 'page' => 'page', 'concave' => 'concave', 'zoom' => 'zoom', 'linear' => 'linear', 'fade' => 'fade', 'none' => 'none');
 }
 
 function revealjs_get_transitionspeeds() {
-    return array('default', 'fast', 'slow');
+    return array('default' => 'default', 'fast' => 'fast', 'slow' => 'slow');
 }
 
 function revealjs_get_backgroundtransitions() {
-    return array('default', 'linear', 'none');
+    return array('default' => 'default', 'linear' => 'linear', 'none' => 'none');
 }
