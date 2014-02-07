@@ -20,9 +20,6 @@ along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 Presentation module (reveal.js)
 ==============================
 
-IMPORTANT: Please also read moodle/mod/revealjs/example_presentation/readme.txt
-This module won't work until you've followed the instructions there!
-
 The Presentation module is an alternative to PowerPoint, PDF, and other
 web-unfriendly formats.
 
