@@ -57,10 +57,10 @@ function revealjs_get_editor_options($context) {
 function revealjs_get_presentations() {
     global $CFG;
     $revealjs_html_urls = array('' => get_string('choosefile', 'revealjs'));
-    $revealjs_html_content = $CFG->dataroot.$CFG->revealjs_content_dir.'/aaaaa/*/*/*.html'; 
+    $revealjs_html_content = $CFG->revealjs_data_dir.$CFG->revealjs_data_structure; 
     foreach (glob($revealjs_html_content) as $revealjs_html_filename) {
         $revealjs_html_path_parts = pathinfo($revealjs_html_filename);
-        $revealjs_html_path = str_replace($CFG->dataroot.$CFG->revealjs_content_dir,'',$revealjs_html_filename);
+        $revealjs_html_path = str_replace($CFG->revealjs_data_dir,'',$revealjs_html_filename);
         $revealjs_html_urls[$revealjs_html_path] = $revealjs_html_path;
     }
     return $revealjs_html_urls;

@@ -126,7 +126,7 @@ function revealjs_update_instance($data, $mform) {
     global $CFG, $DB;
     require_once("$CFG->libdir/resourcelib.php");
     $cmid        = $data->coursemodule;
-    $draftitemid = $data->revealjs['itemid'];
+    //$draftitemid = $data->revealjs['itemid'];
     $data->timemodified = time();
     $data->id           = $data->instance;
     $data->revision++;
@@ -462,4 +462,21 @@ function revealjs_dndupload_handle($uploadinfo) {
     $data->printheading = $config->printheading;
     $data->printintro = $config->printintro;
     return revealjs_add_instance($data, null);
+}
+
+/**
+ * On install move the files directory from /moodle/mod/revealjs/revealjs/ to /moodledata/repository/revealjs/
+ * @global object $CFG
+ * @return string
+ */
+function revealjs_rename_dir() {
+    global $CFG;
+    if(file_exists($CFG->revealjs_data_dir))
+    {
+        return get_string('data_dir_exists', 'revealjs').$CFG->revealjs_data_dir;
+    }
+    if(rename($CFG->dirroot.'/mod/revealjs/revealjs', $CFG->revealjs_data_dir)) {
+        return get_string('data_dir_moved', 'revealjs').$CFG->dirroot.'/mod/revealjs/revealjs'.' - '.$CFG->revealjs_data_dir; // This never gets shown!
+    }
+    return get_string('data_dir_error', 'revealjs').$CFG->dirroot.'/mod/revealjs/revealjs'.' - '.$CFG->revealjs_data_dir;
 }

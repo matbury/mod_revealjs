@@ -222,7 +222,7 @@ class mod_revealjs_mod_form extends moodleform_mod {
         $mform->setDefault('revision', 1);
     }
 
-    function data_preprocessing(&$default_values) {
+    /*function data_preprocessing(&$default_values) {
         if ($this->current->instance) {
             $draftitemid = file_get_submitted_draft_itemid('revealjs');
             $default_values['revealjs']['format'] = $default_values['contentformat'];
@@ -244,6 +244,6 @@ class mod_revealjs_mod_form extends moodleform_mod {
                 $default_values['popupheight'] = $displayoptions['popupheight'];
             }
         }
-    }
+    }*/
 }
 

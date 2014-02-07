@@ -112,3 +112,13 @@ $string['backgroundtransition_help'] = 'Transition style for full page backgroun
 $string['appearance'] = 'Appearance';
 //
 $string['content_error'] = '404 Error: File not found. Presentation settings and/or path to file not set correctly.';
+// settings.php
+$string['data_dir'] = 'Files Directory';
+$string['data_dir_explain'] = 'Directory were presentations and media files are located.';
+$string['data_url'] = 'URL';
+$string['data_url_explain'] = 'URL to Files Directory (Proxy)';
+$string['data_structure'] = 'Directory Structure';
+$string['data_structure_explain'] = 'How the files are organised and where the Presentation module will search for presentations.';
+$string['data_dir_exists'] = 'Files Directory is located at: ';
+$string['data_dir_moved'] = 'FIRST INSTALL Files Directory has been successfully moved: ';
+$string['data_dir_error'] = 'Please check: A possible error occured while attempting to move /moodle/mod/swf/swf/ directory and all its contents to: ';

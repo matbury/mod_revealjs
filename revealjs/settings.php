@@ -28,6 +28,21 @@ defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
     require_once("$CFG->libdir/resourcelib.php");
+    require_once($CFG->dirroot.'/mod/revealjs/lib.php');
+    
+    $revealjs_width = 90;
+    
+    // Move swf directory?
+    $revealjs_data_dir = '';
+    if(isset($CFG->revealjs_data_dir)) {
+        $revealjs_data_dir = revealjs_rename_dir();
+    }
+    
+    $settings->add(new admin_setting_configtext('revealjs_data_dir', get_string('data_dir', 'revealjs'), get_string('data_dir_explain', 'revealjs').' '.$revealjs_data_dir, $CFG->dataroot.'/repository/revealjs/', PARAM_RAW, $revealjs_width));
+    
+    $settings->add(new admin_setting_configtext('revealjs_data_url', get_string('data_url', 'revealjs'), get_string('data_url_explain', 'revealjs'), $CFG->wwwroot.'/mod/revealjs/content.php/', PARAM_RAW, $revealjs_width));
+    
+    $settings->add(new admin_setting_configtext('revealjs_data_structure', get_string('data_structure', 'revealjs'), get_string('data_structure_explain', 'revealjs'), '_revealjs_/*/*/*.*', PARAM_RAW, $revealjs_width));
 
     $displayoptions = resourcelib_get_displayoptions(array(RESOURCELIB_DISPLAY_OPEN, RESOURCELIB_DISPLAY_POPUP));
     $defaultdisplayoptions = array(RESOURCELIB_DISPLAY_POPUP);

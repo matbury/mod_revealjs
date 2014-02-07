@@ -105,9 +105,9 @@ echo $OUTPUT->footer();
  */
 
 // Load HTML presentation file
-$revealjs->presentation = file_get_contents($CFG->dataroot.$CFG->revealjs_content_dir.$revealjs->presentation);
+$revealjs->presentation = file_get_contents($CFG->revealjs_data_dir.$revealjs->presentation);
 // Replace URLs to embedded media in moodledata in HTML presentation file
-$revealjs->presentation = str_replace('src="aaaaa/', 'src="'.$CFG->wwwroot.'/mod/revealjs/content.php/aaaaa/', $revealjs->presentation);
+$revealjs->presentation = str_replace('src="_revealjs_/', 'src="'.$CFG->wwwroot.'/mod/revealjs/content.php/_revealjs_/', $revealjs->presentation);
 
 ?>
 
