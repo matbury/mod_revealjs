@@ -252,11 +252,11 @@ function revealjs_get_coursemodule_info($coursemodule) {
  * @param stdClass $context context object
  * @return array
  */
-function revealjs_get_file_areas($course, $cm, $context) {
+/*function revealjs_get_file_areas($course, $cm, $context) {
     $areas = array();
     $areas['content'] = get_string('content', 'revealjs');
     return $areas;
-}
+}*/
 
 /**
  * File browsing support for revealjs module content area.
@@ -274,7 +274,7 @@ function revealjs_get_file_areas($course, $cm, $context) {
  * @param string $filename file name
  * @return file_info instance or null if not found
  */
-function revealjs_get_file_info($browser, $areas, $course, $cm, $context, $filearea, $itemid, $filepath, $filename) {
+/*function revealjs_get_file_info($browser, $areas, $course, $cm, $context, $filearea, $itemid, $filepath, $filename) {
     global $CFG;
     if (!has_capability('moodle/course:managefiles', $context)) {
         // students can not peak here!
@@ -298,7 +298,7 @@ function revealjs_get_file_info($browser, $areas, $course, $cm, $context, $filea
     }
     // note: revealjs_intro handled in file_browser automatically
     return null;
-}
+}*/
 
 /**
  * Serves the revealjs files.
@@ -314,7 +314,7 @@ function revealjs_get_file_info($browser, $areas, $course, $cm, $context, $filea
  * @param array $options additional options affecting the file serving
  * @return bool false if file not found, does not return if found - just send the file
  */
-function revealjs_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+/*function revealjs_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
     global $CFG, $DB;
     require_once("$CFG->libdir/resourcelib.php");
     if ($context->contextlevel != CONTEXT_MODULE) {
@@ -363,7 +363,7 @@ function revealjs_pluginfile($course, $cm, $context, $filearea, $args, $forcedow
         // finally send the file
         send_stored_file($file, 86400, 0, $forcedownload, $options);
     }
-}
+}*/
 
 /**
  * Return a list of revealjs types
@@ -371,17 +371,17 @@ function revealjs_pluginfile($course, $cm, $context, $filearea, $args, $forcedow
  * @param stdClass $parentcontext Block's parent context
  * @param stdClass $currentcontext Current context of block
  */
-function revealjs_revealjs_type_list($revealjstype, $parentcontext, $currentcontext) {
+/*function revealjs_revealjs_type_list($revealjstype, $parentcontext, $currentcontext) {
     $module_revealjstype = array('mod-revealjs-*'=>get_string('revealjs-mod-revealjs-x', 'revealjs'));
     return $module_revealjstype;
-}
+}*/
 
 /**
  * Export revealjs resource contents
  *
  * @return array of file content
  */
-function revealjs_export_contents($cm, $baseurl) {
+/*function revealjs_export_contents($cm, $baseurl) {
     global $CFG, $DB;
     $contents = array();
     $context = context_module::instance($cm->id);
@@ -421,25 +421,25 @@ function revealjs_export_contents($cm, $baseurl) {
     $revealjsfile['license']      = null;
     $contents[] = $revealjsfile;
     return $contents;
-}
+}*/
 
 /**
  * Register the ability to handle drag and drop file uploads
  * @return array containing details of the files / types the mod can handle
  */
-function revealjs_dndupload_register() {
+/*function revealjs_dndupload_register() {
     return array('types' => array(
                      array('identifier' => 'text/html', 'message' => get_string('createrevealjs', 'revealjs')),
                      array('identifier' => 'text', 'message' => get_string('createrevealjs', 'revealjs'))
                  ));
-}
+}*/
 
 /**
  * Handle a file that has been uploaded
  * @param object $uploadinfo details of the file / content that has been uploaded
  * @return int instance id of the newly created mod
  */
-function revealjs_dndupload_handle($uploadinfo) {
+/*function revealjs_dndupload_handle($uploadinfo) {
     // Gather the required info.
     $data = new stdClass();
     $data->course = $uploadinfo->course->id;
@@ -462,7 +462,7 @@ function revealjs_dndupload_handle($uploadinfo) {
     $data->printheading = $config->printheading;
     $data->printintro = $config->printintro;
     return revealjs_add_instance($data, null);
-}
+}*/
 
 /**
  * On install move the files directory from /moodle/mod/revealjs/revealjs/ to /moodledata/repository/revealjs/
@@ -474,6 +474,10 @@ function revealjs_rename_dir() {
     if(file_exists($CFG->revealjs_data_dir))
     {
         return get_string('data_dir_exists', 'revealjs').$CFG->revealjs_data_dir;
+    }
+    if(!file_exists($CFG->dataroot.'/repository/')) // repository dir is not created by Moodle by default
+    {
+        mkdir($CFG->dataroot.'/repository/');
     }
     if(rename($CFG->dirroot.'/mod/revealjs/revealjs', $CFG->revealjs_data_dir)) {
         return get_string('data_dir_moved', 'revealjs').$CFG->dirroot.'/mod/revealjs/revealjs'.' - '.$CFG->revealjs_data_dir; // This never gets shown!
