@@ -46,16 +46,16 @@ free and open source and creating a "freemium" account is required to use it.
 
 Installation
 
-1. Upload /revealjs/ directory and all its contents to /moodle/mod/ 
+1. Upload `/revealjs/` directory and all its contents to `/moodle/mod/` 
 2. In Moodle, login as administrator
 3. Go to Administration > Site administration > Notifications
 4. Installation process will initiate (follow the on-screen instructions)
 
 During the installation process, the SWF Activity Module will attempt to move 
-the /moodle/mod/revealjs/revealjs/ directory to /moodledata/repository/
+the `/moodle/mod/revealjs/revealjs/` directory to `/moodledata/repository/`
 If this fails, you will have to move the directory and all its contents manually.
 
-There's an example presentation in /revealjs/_revealjs_/matbury/sdl_learner/ to 
+There's an example presentation in `/revealjs/_revealjs_/matbury/sdl_learner/` to 
 get you started
 
 For further information about installing activity modules in Moodle see:
