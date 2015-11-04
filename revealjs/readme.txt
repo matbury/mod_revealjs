@@ -50,4 +50,4 @@ There's an example presentation in /revealjs/_revealjs_/matbury/sdl_learner/ to
 get you started
 
 For further information about installing activity modules in Moodle see:
-http://docs.moodle.org/25/en/Installing_add-ons
+http://docs.moodle.org/29/en/Installing_add-ons
