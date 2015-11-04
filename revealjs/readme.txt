@@ -37,7 +37,7 @@ free and open source and creating a "freemium" account is required to use it.
 
 Installation
 
-1. Upload /revealjs/ directory and all its contents to /moodle/mod/ 
+1. Upload /presentation/ directory and all its contents to /moodle/mod/ 
 2. In Moodle, login as administrator
 3. Go to Administration > Site administration > Notifications
 4. Installation process will initiate (follow the on-screen instructions)

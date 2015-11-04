@@ -48,12 +48,15 @@ class mod_revealjs_mod_form extends moodleform_mod {
         }
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
-        $this->add_intro_editor();
+        //$this->add_intro_editor();
+        $this->standard_intro_elements();
         //$config->requiremodintro;
 
         //-------------------------------------------------------
         $mform->addElement('header', 'contentsection', get_string('contentheader', 'revealjs'));
-        //$mform->addElement('editor', 'revealjs', get_string('content', 'revealjs'), null, revealjs_get_editor_options($this->context));
+        //$mform->addElement('editor', 'presentation', get_string('content', 'revealjs'), null, revealjs_get_editor_options($this->context));
+        
+        // HTML presentation slides file retrieved from moodledata/repository/revealjs/
         $mform->addElement('select', 'presentation', get_string('presentation', 'revealjs'), revealjs_get_presentations(), '');
         $mform->setDefault('presentation', '');
         $mform->setType('presentation', PARAM_TEXT);
@@ -62,13 +65,13 @@ class mod_revealjs_mod_form extends moodleform_mod {
         
         //theme revealjs_get_themes()
         $mform->addElement('select', 'theme', get_string('theme', 'revealjs'), revealjs_get_themes(), '');
-        $mform->setDefault('theme', 'default.css');
+        $mform->setDefault('theme', 'black.css');
         $mform->setType('theme', PARAM_TEXT);
         $mform->addHelpButton('theme', 'theme', 'revealjs');
         
         //transition revealjs_get_transitions()
         $mform->addElement('select', 'transition', get_string('transition', 'revealjs'), revealjs_get_transitions(), '');
-        $mform->setDefault('transition', 'default');
+        $mform->setDefault('transition', 'slide');
         $mform->setType('transition', PARAM_TEXT);
         $mform->addHelpButton('transition', 'transition', 'revealjs');
         
@@ -79,7 +82,7 @@ class mod_revealjs_mod_form extends moodleform_mod {
         
         //backgroundtransition revealjs_get_backgroundtransitions()
         $mform->addElement('select', 'backgroundtransition', get_string('backgroundtransition', 'revealjs'), revealjs_get_backgroundtransitions(), '');
-        $mform->setDefault('backgroundtransition', 'default');
+        $mform->setDefault('backgroundtransition', 'none');
         $mform->setType('backgroundtransition', PARAM_TEXT);
         $mform->addHelpButton('backgroundtransition', 'backgroundtransition', 'revealjs');
         
@@ -87,7 +90,7 @@ class mod_revealjs_mod_form extends moodleform_mod {
         $mform->addElement('text', 'margin', get_string('margin', 'revealjs'), array('size'=>5));
         $mform->addRule('margin', null, 'required', null, 'client');
         $mform->setType('margin', PARAM_TEXT);
-        $mform->setDefault('margin', '0.1');
+        $mform->setDefault('margin', '0.05');
         $mform->addHelpButton('margin', 'margin', 'revealjs');
         
         //minscale
@@ -116,6 +119,11 @@ class mod_revealjs_mod_form extends moodleform_mod {
         $mform->setDefault('progress', 'true');
         $mform->addHelpButton('progress', 'progress', 'revealjs');
         
+        //slidenumber
+        $mform->addElement('select', 'slidenumber', get_string('slidenumber', 'revealjs'), $revealjs_true_false);
+        $mform->setDefault('slidenumber', 'true');
+        $mform->addHelpButton('slidenumber', 'slidenumber', 'revealjs');
+        
         //history
         $mform->addElement('select', 'history', get_string('history', 'revealjs'), $revealjs_true_false);
         $mform->setDefault('history', 'true');
@@ -125,11 +133,6 @@ class mod_revealjs_mod_form extends moodleform_mod {
         $mform->addElement('select', 'keyboard', get_string('keyboard', 'revealjs'), $revealjs_true_false);
         $mform->setDefault('keyboard', 'true');
         $mform->addHelpButton('keyboard', 'keyboard', 'revealjs');
-        
-        //touch
-        $mform->addElement('select', 'touch', get_string('touch', 'revealjs'), $revealjs_true_false);
-        $mform->setDefault('touch', 'true');
-        $mform->addHelpButton('touch', 'touch', 'revealjs');
         
         //overview
         $mform->addElement('select', 'overview', get_string('overview', 'revealjs'), $revealjs_true_false);
@@ -141,9 +144,34 @@ class mod_revealjs_mod_form extends moodleform_mod {
         $mform->setDefault('center', 'true');
         $mform->addHelpButton('center', 'center', 'revealjs');
         
-        //loop
+        //touch
+        $mform->addElement('select', 'touch', get_string('touch', 'revealjs'), $revealjs_true_false);
+        $mform->setDefault('touch', 'true');
+        $mform->addHelpButton('touch', 'touch', 'revealjs');
+        
+        //looped
         $mform->addElement('select', 'looped', get_string('looped', 'revealjs'), $revealjs_true_false);
         $mform->setDefault('looped', 'true');
+        
+        //rtl
+        $mform->addElement('select', 'rtl', get_string('rtl', 'revealjs'), $revealjs_true_false);
+        $mform->setDefault('rtl', 'false');
+        $mform->addHelpButton('rtl', 'rtl', 'revealjs');
+        
+        //fragments
+        $mform->addElement('select', 'fragments', get_string('fragments', 'revealjs'), $revealjs_true_false);
+        $mform->setDefault('fragments', 'true');
+        $mform->addHelpButton('fragments', 'fragments', 'revealjs');
+        
+        //embedded
+        $mform->addElement('select', 'embedded', get_string('embedded', 'revealjs'), $revealjs_true_false);
+        $mform->setDefault('embedded', 'false');
+        $mform->addHelpButton('embedded', 'embedded', 'revealjs');
+        
+        //help
+        $mform->addElement('select', 'help', get_string('help', 'revealjs'), $revealjs_true_false);
+        $mform->setDefault('help', 'true');
+        $mform->addHelpButton('help', 'help', 'revealjs');
         
         //autoslide
         $mform->addElement('text', 'autoslide', get_string('autoslide', 'revealjs'), array('size'=>5));
@@ -152,17 +180,75 @@ class mod_revealjs_mod_form extends moodleform_mod {
         $mform->setDefault('autoslide', '0');
         $mform->addHelpButton('autoslide', 'autoslide', 'revealjs');
         
+        //autoslidestoppable
+        $mform->addElement('select', 'autoslidestoppable', get_string('autoslidestoppable', 'revealjs'), $revealjs_true_false);
+        $mform->setDefault('autoslidestoppable', 'true');
+        $mform->addHelpButton('autoslidestoppable', 'autoslidestoppable', 'revealjs');
+        
         //mousewheel
         $mform->addElement('select', 'mousewheel', get_string('mousewheel', 'revealjs'), $revealjs_true_false);
         $mform->setDefault('mousewheel', 'true');
         $mform->addHelpButton('mousewheel', 'mousewheel', 'revealjs');
         
-        //rtl
-        $mform->addElement('select', 'rtl', get_string('rtl', 'revealjs'), $revealjs_true_false);
-        $mform->setDefault('rtl', 'false');
-        $mform->addHelpButton('rtl', 'rtl', 'revealjs');
+        //remotes
+        $mform->addElement('select', 'remotes', get_string('remotes', 'revealjs'), $revealjs_true_false);
+        $mform->setDefault('remotes', 'false');
+        $mform->addHelpButton('remotes', 'remotes', 'revealjs');
         
-
+        //audioslideshow
+        $mform->addElement('select', 'audioslideshow', get_string('audioslideshow', 'revealjs'), $revealjs_true_false);
+        $mform->setDefault('audioslideshow', 'false');
+        $mform->addHelpButton('audioslideshow', 'audioslideshow', 'revealjs');
+        
+        //audioslideshowtime
+        $mform->addElement('text', 'audioslideshowtime', get_string('audioslideshowtime', 'revealjs'), array('size'=>5));
+        $mform->addRule('audioslideshowtime', null, 'required', null, 'client');
+        $mform->setType('audioslideshowtime', PARAM_TEXT);
+        $mform->setDefault('audioslideshowtime', '5');
+        $mform->addHelpButton('audioslideshowtime', 'audioslideshowtime', 'revealjs');
+        
+        //hideaddressbar
+        $mform->addElement('select', 'hideaddressbar', get_string('hideaddressbar', 'revealjs'), $revealjs_true_false);
+        $mform->setDefault('hideaddressbar', 'true');
+        $mform->addHelpButton('hideaddressbar', 'hideaddressbar', 'revealjs');
+        
+        //previewlinks
+        $mform->addElement('select', 'previewlinks', get_string('previewlinks', 'revealjs'), $revealjs_true_false);
+        $mform->setDefault('previewlinks', 'false');
+        $mform->addHelpButton('previewlinks', 'previewlinks', 'revealjs');
+        
+        //viewdistance
+        $mform->addElement('text', 'viewdistance', get_string('viewdistance', 'revealjs'), array('size'=>5));
+        $mform->addRule('viewdistance', null, 'required', null, 'client');
+        $mform->setType('viewdistance', PARAM_TEXT);
+        $mform->setDefault('viewdistance', '3');
+        $mform->addHelpButton('viewdistance', 'viewdistance', 'revealjs');
+        
+        //parallaxbackground
+        $mform->addElement('header', 'contentsection', get_string('parallaxbackground', 'revealjs'));
+        //parallaxbackgroundimage
+        $mform->addElement('text', 'parallaxbackgroundimage', get_string('parallaxbackgroundimage', 'revealjs'), array('size'=>80));
+        $mform->setType('parallaxbackgroundimage', PARAM_TEXT);
+        $mform->addHelpButton('parallaxbackgroundimage', 'parallaxbackgroundimage', 'revealjs');
+        
+        //parallaxbackgroundsize
+        $mform->addElement('text', 'parallaxbackgroundsize', get_string('parallaxbackgroundsize', 'revealjs'), array('size'=>20));
+        $mform->setType('parallaxbackgroundsize', PARAM_TEXT);
+        $mform->setDefault('parallaxbackgroundsize', '1280px 700px');
+        $mform->addHelpButton('parallaxbackgroundsize', 'parallaxbackgroundsize', 'revealjs');
+        
+        //parallaxbackgroundhorizontal
+        $mform->addElement('text', 'parallaxbackgroundhorizontal', get_string('parallaxbackgroundhorizontal', 'revealjs'), array('size'=>20));
+        $mform->setType('parallaxbackgroundhorizontal', PARAM_TEXT);
+        $mform->setDefault('parallaxbackgroundhorizontal', '0');
+        $mform->addHelpButton('parallaxbackgroundhorizontal', 'parallaxbackgroundhorizontal', 'revealjs');
+        
+        //parallaxbackgroundvertical
+        $mform->addElement('text', 'parallaxbackgroundvertical', get_string('parallaxbackgroundvertical', 'revealjs'), array('size'=>20));
+        $mform->setType('parallaxbackgroundvertical', PARAM_TEXT);
+        $mform->setDefault('parallaxbackgroundvertical', '0');
+        $mform->addHelpButton('parallaxbackgroundvertical', 'parallaxbackgroundvertical', 'revealjs');
+        
         //-------------------------------------------------------
         $mform->addElement('header', 'appearance', get_string('appearance','revealjs'));
 

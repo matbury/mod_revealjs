@@ -16,11 +16,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Private revealjs module utility functions
+ * Private presentation module utility functions
  *
  * @package    mod
  * @subpackage revealjs
- * @copyright  2013 Matt Bury <matt@matbury.com>  {@link http://matbury.com}
+ * @copyright  2015 Matt Bury <matt@matbury.com>  {@link http://matbury.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -54,6 +54,11 @@ function revealjs_get_editor_options($context) {
     return array('subdirs'=>1, 'maxbytes'=>$CFG->maxbytes, 'maxfiles'=>-1, 'changeformat'=>1, 'context'=>$context, 'noclean'=>1, 'trusttext'=>0);
 }
 
+/**
+ * Searches and lists all files in moodledata/repository/revealjs/_revealjs_/[usr]/[name]/[revealjs].*
+ * @global object $CFG
+ * @return array (list of presentations)
+ */
 function revealjs_get_presentations() {
     global $CFG;
     $revealjs_html_urls = array('' => get_string('choosefile', 'revealjs'));
@@ -66,6 +71,11 @@ function revealjs_get_presentations() {
     return $revealjs_html_urls;
 }
 
+/**
+ * Searches and lists all CSS themes in moodle/mod/revealjs/css/theme/*.css
+ * @global object $CFG
+ * @return array (list of CSS themes)
+ */
 function revealjs_get_themes() {
     global $CFG;
     $revealjs_urls = array();
@@ -76,17 +86,48 @@ function revealjs_get_themes() {
         $revealjs_urls[$revealjs_filename] = $revealjs_path_parts['basename'];
     }
     return $revealjs_urls;
-    //return array('beige.css', 'default.css', 'moon.css', 'right.css', 'serif.css', 'simple.css', 'sky.css', 'solarized.css');
+    // return array('beige.css', 'black.css', 'blood.css', 'league.css', 'moon.css', 'night.css', 'serif.css', 'simple.css', 'sky.css', 'solarized.css', 'white.css');
 }
 
+/**
+ * List of transition types
+ * @return array
+ */
 function revealjs_get_transitions() {
-    return array('default' => 'default', 'cube' => 'cube', 'page' => 'page', 'concave' => 'concave', 'zoom' => 'zoom', 'linear' => 'linear', 'fade' => 'fade', 'none' => 'none');
+    // none/fade/slide/convex/concave/zoom
+    return array('none' => 'none', 'fade' => 'fade', 'slide' => 'slide', 'convex' => 'convex', 'concave' => 'concave', 'zoom' => 'zoom');
 }
 
+/**
+ * List of transition speeds
+ * @return array
+ */
 function revealjs_get_transitionspeeds() {
     return array('default' => 'default', 'fast' => 'fast', 'slow' => 'slow');
 }
 
+/**
+ * List of background transition types
+ * @return array
+ */
 function revealjs_get_backgroundtransitions() {
-    return array('default' => 'default', 'linear' => 'linear', 'none' => 'none');
+    // none/fade/slide/convex/concave/zoom
+    return array('none' => 'none', 'fade' => 'fade', 'slide' => 'slide', 'convex' => 'convex', 'concave' => 'concave', 'zoom' => 'zoom');
+}
+
+/**
+ * Searches and lists all files in moodledata/repository/revealjs/_revealjs_/[usr]/commonfiles/backgrounds/*.*
+ * @global object $CFG
+ * @return array
+ */
+function revealjs_get_backgroundimages() {
+    global $CFG;
+    $revealjs_backgroundimages = array('' => get_string('choosefile', 'revealjs'));
+    $revealjs_image_content = $CFG->revealjs_data_dir.'_revealjs_/*/commonfiles/backgrounds/*.*';
+    foreach (glob($revealjs_image_content) as $revealjs_image_filename) {
+        $revealjs_image_path_parts = pathinfo($revealjs_image_filename);
+        $revealjs_image_path = str_replace($CFG->revealjs_data_dir,'',$revealjs_image_filename);
+        $revealjs_backgroundimages[$revealjs_image_path] = $revealjs_image_path;
+    }
+    return $revealjs_backgroundimages;
 }

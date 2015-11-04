@@ -20,7 +20,7 @@
  *
  * @package    mod
  * @subpackage revealjs
- * @copyright  2013 Matt Bury <matt@matbury.com>  {@link http://matbury.com}
+ * @copyright  2015 Matt Bury <matt@matbury.com>  {@link http://matbury.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -51,15 +51,23 @@ require_course_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/revealjs:view', $context);
 
-add_to_log($course->id, 'revealjs', 'view', 'view.php?id='.$cm->id, $revealjs->id, $cm->id);
+// Trigger module viewed event.
+/*$event = \mod_revealjs\event\course_module_viewed::create(array(
+   'objectid' => $revealjs->id,
+   'context' => $context
+));
+$event->add_record_snapshot('course_modules', $cm);
+$event->add_record_snapshot('course', $course);
+$event->add_record_snapshot('revealjs', $revealjs);
+$event->trigger();*/
 
 // Update 'viewed' state if required by completion system
 require_once($CFG->libdir . '/completionlib.php');
 $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
 
-/*
-// Don't use Moodle's page renderer
+/* Don't use Moodle's page renderer
+ *  
 $PAGE->set_url('/mod/revealjs/view.php', array('id' => $cm->id));
 
 $options = empty($revealjs->displayoptions) ? array() : unserialize($revealjs->displayoptions);
@@ -102,126 +110,180 @@ $content = format_text($content, $revealjs->contentformat, $formatoptions);
 echo $content;
 echo $OUTPUT->box($content, "generalbox center clearfix");
 echo $OUTPUT->footer();
+ * 
  */
+
+//
+$revealjs_back_close = '<a href="'.$CFG->wwwroot.'/course/view.php?id='.$course->id.'" title="'.get_string('saveandclose','revealjs').'">Save & Close</a>';
+if($inpopup === 1)
+{
+    $revealjs_back_close = '<a href="javascript:window.close();" title="'.get_string('saveandclose','revealjs').'">Save & Close</a>';
+}
+
+// Enable remote control?
+$revealjs_remotes = '';
+if($revealjs->remotes === 'true')
+{
+    $revealjs_remotes = '{ src: \'plugin/remotes/remotes.js\', async: true },';
+}
+
+// Enable audio-slideshow?
+$revealjs_audioslideshow = '';
+$revealjs_transcript = '';
+if($revealjs->audioslideshow === 'true')
+{
+    $revealjs_audioslideshow = '{ src: \'plugin/audio-slideshow/slideshow-recorder.js\', condition: function( ) { return !!document.body.classList; } },	
+                { src: \'plugin/audio-slideshow/audio-slideshow.js\', condition: function( ) { return !!document.body.classList; } },';
+    $revealjs_transcript = '<a href="javascript: showHide();" title="'.get_string('showhidetranscript','revealjs').'">Transcript</a>';
+}
+
+//background image used?
+if($revealjs->parallaxbackgroundimage === '')
+{
+    $revealjs->parallaxbackgroundsize = '0';
+    $revealjs->parallaxbackgroundhorizontal = '0';
+    $revealjs->parallaxbackgroundvertical = '0';
+}
 
 // Load HTML presentation file
 $revealjs->presentation = file_get_contents($CFG->revealjs_data_dir.$revealjs->presentation);
 // Replace URLs to embedded media in moodledata in HTML presentation file
-$revealjs->presentation = str_replace('src="_revealjs_/', 'src="'.$CFG->wwwroot.'/mod/revealjs/content.php/_revealjs_/', $revealjs->presentation);
+$revealjs->presentation = str_replace('_revealjs_/', $CFG->wwwroot.'/mod/revealjs/content.php/_revealjs_/', $revealjs->presentation);
 
 ?>
-
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title><?php echo $revealjs->name; ?></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="keywords" content="<?php echo $revealjs->name; ?>" />
-    <meta http-equiv="pragma" content="no-cache" />
-    <meta http-equiv="expires" content="0" />
-    <meta name="last-modified" content="<?php echo userdate($revealjs->timemodified); ?>">
-    <meta name="last-modified-timestamp" content="<?php echo $revealjs->timemodified; ?>">
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="css/reveal.min.css">
-    <!-- Set theme: beige, default, moon, right, serif, simple, sky, solarized -->
-    <link rel="stylesheet" href="css/theme/<?php echo $revealjs->theme; ?>" id="theme">
-    <!-- For syntax highlighting -->
-    <link rel="stylesheet" href="lib/css/zenburn.css">
-    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
-    <script type="text/javascript">
-        document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
-    </script>
-    <!--[if lt IE 9]>
-        <script src="lib/js/html5shiv.js"></script>
-    <![endif]-->
-</head>
-<body>
-    <div class="reveal">
-        
-        <!-- Any section element inside of this container is displayed as a slide -->
-        <div class="slides">
-            <?php echo $revealjs->presentation; ?>
+    <head>
+        <meta charset="utf-8">
+        <title><?php echo $revealjs->name; ?></title>
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+        <link rel="stylesheet" href="css/reveal.css">
+        <link rel="stylesheet" href="css/theme/<?php echo $revealjs->theme; ?>" id="theme">
+        <!-- Code syntax highlighting -->
+        <link rel="stylesheet" href="lib/css/zenburn.css">
+        <link href="css/menu.css" rel="stylesheet" type="text/css"/>
+        <!-- Printing and PDF exports -->
+        <script>
+            var link = document.createElement( 'link' );
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+            document.getElementsByTagName( 'head' )[0].appendChild( link );
+        </script>
+        <!-- Show/Hide <transcript/> tags -->
+        <style>
+            .trans {
+                display: none;
+            }
+            .topbar a {
+                font-family: Arial;
+                font-weight: bold;
+                text-decoration: none;
+                color: #888;
+                float: right;
+                padding: 5px;
+            }
+        </style>
+        <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+        <script>
+        function showHide() {
+            $( "transcript" ).toggleClass( "trans" );
+        };
+	window.onload = function() {
+            showHide();
+        };
+        </script>
+        <!-- End of Show/Hide <transcript/> tags -->
+        <!--[if lt IE 9]>
+            <script src="lib/js/html5shiv.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <div class="topbar"><?php echo $revealjs_back_close .' '. $revealjs_transcript ?> <a href="javascript:Reveal.toggleOverview();" title="<?php get_string('toggleoverview','revealjs'); ?>">Overview</a></div>
+    
+        <div class="reveal">
+            <!-- Any section element inside of this container is displayed as a slide -->
+            <div class="slides">
+                <?php echo $revealjs->presentation; ?>
+            </div>
         </div>
         
-    </div>
-    <script src="lib/js/head.min.js"></script>
-    <script src="js/reveal.min.js"></script>
-    <script type="text/javascript">
-        // Full list of configuration options available here:
-        // https://github.com/hakimel/reveal.js#configuration
-        Reveal.initialize({
-        
-        // The "normal" size of the presentation, aspect ratio will be preserved
-        // when the presentation is scaled to fit different resolutions. Can be
-        // specified using percentage units.
-        width: <?php echo $revealjs->width ?>,
-        height: <?php echo $revealjs->height ?>,
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.js"></script>
+        <script src="js/cookies.js"></script>
+        <script>
+            // Full list of configuration options available at:
+            // https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                margin: <?php echo $revealjs->margin; ?>,
+                minScale: <?php echo $revealjs->minscale; ?>,
+                maxScale: <?php echo $revealjs->maxscale; ?>,
+                controls: <?php echo $revealjs->controls; ?>,
+                progress: <?php echo $revealjs->progress; ?>,
+                slideNumber: <?php echo $revealjs->slidenumber; ?>,
+                history: <?php echo $revealjs->history; ?>,
+                keyboard: <?php echo $revealjs->keyboard; ?>,
+                overview: <?php echo $revealjs->overview; ?>,
+                center: <?php echo $revealjs->center; ?>,
+                touch: <?php echo $revealjs->touch; ?>,
+                loop: <?php echo $revealjs->looped; ?>,
+                rtl: <?php echo $revealjs->rtl; ?>,
+                fragments: <?php echo $revealjs->fragments; ?>,
+                embedded: <?php echo $revealjs->embedded; ?>,
+                help: <?php echo $revealjs->help; ?>,
+                autoSlide: <?php echo $revealjs->autoslide; ?>,
+                autoSlideStoppable: <?php echo $revealjs->autoslidestoppable; ?>,
+                mouseWheel: <?php echo $revealjs->mousewheel; ?>,
+                hideAddressBar: <?php echo $revealjs->hideaddressbar; ?>,
+                previewLinks: <?php echo $revealjs->previewlinks; ?>,
+                transition: '<?php echo $revealjs->transition; ?>', // none/fade/slide/convex/concave/zoom
+                transitionSpeed: '<?php echo $revealjs->transition; ?>', // default/fast/slow
+                backgroundTransition: '<?php echo $revealjs->backgroundtransition; ?>', // none/fade/slide/convex/concave/zoom
+                viewDistance: <?php echo $revealjs->viewdistance; ?>,
+                parallaxBackgroundImage: '<?php echo $revealjs->parallaxbackgroundimage; ?>', // URL to img or HTML file
+                parallaxBackgroundSize: '<?php echo $revealjs->parallaxbackgroundimage; ?>',
+                parallaxBackgroundHorizontal: <?php echo $revealjs->parallaxbackgroundhorizontal; ?>,
+                parallaxBackgroundVertical: <?php echo $revealjs->parallaxbackgroundvertical; ?>,
+                //
+                audioPrefix: 'audio/',
+                audioSuffix: '.mp3',
+                audioDefaultDuration: <?php echo $revealjs->audioslideshowtime; ?>,
+                audioPlayerOpacity: 0.2,
 
-        // Factor of the display size that should remain empty around the content
-        margin: <?php echo $revealjs->margin ?>,
-
-        // Bounds for smallest/largest possible scale to apply to content
-        minScale: <?php echo $revealjs->minscale ?>,
-        maxScale: <?php echo $revealjs->maxscale ?>,
-        
-        // Display controls in the bottom right corner
-        controls: <?php echo $revealjs->controls ?>,
-
-        // Display a presentation progress bar
-        progress: <?php echo $revealjs->progress ?>,
-
-        // Push each slide change to the browser history
-        history: <?php echo $revealjs->history ?>,
-
-        // Enable keyboard shortcuts for navigation
-        keyboard: <?php echo $revealjs->keyboard ?>,
-
-        // Enable touch events for navigation
-        touch: <?php echo $revealjs->touch ?>,
-
-        // Enable the slide overview mode
-        overview: <?php echo $revealjs->overview ?>,
-
-        // Vertical centering of slides
-        center: <?php echo $revealjs->center ?>,
-
-        // Loop the presentation
-        loop: <?php echo $revealjs->looped ?>,
-
-        // Change the presentation direction to be RTL
-        rtl: <?php echo $revealjs->rtl ?>,
-
-        // Number of milliseconds between automatically proceeding to the
-        // next slide, disabled when set to 0, this value can be overwritten
-        // by using a data-autoslide attribute on your slides
-        autoSlide: <?php echo $revealjs->autoslide ?>,
-
-        // Enable slide navigation via mouse wheel
-        mouseWheel: <?php echo $revealjs->mousewheel ?>,
-
-        // Transition style
-        transition: '<?php echo $revealjs->transition ?>', // default/cube/page/concave/zoom/linear/fade/none
-
-        // Transition speed
-        transitionSpeed: '<?php echo $revealjs->transitionspeed ?>', // default/fast/slow
-
-        // Transition style for full page backgrounds
-        backgroundTransition: '<?php echo $revealjs->backgroundtransition ?>', // default/linear/none
-        
-        // Optional libraries used to extend on reveal.js
-        dependencies: [
-            { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
-            { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-            { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-            { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-            { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
-            { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
-        ]
-        });
-    </script>
-</body>
+            // Optional reveal.js plugins
+            dependencies: [
+                // Cross-browser shim that fully implements classList - https://github.com/eligrey/classList.js/
+                { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                // Interpret Markdown in <section> elements
+                { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                // Syntax highlight for <code> elements
+                { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                // Zoom in and out with Alt+click
+                { src: 'plugin/zoom-js/zoom.js', async: true },
+                // Speaker notes
+                { src: 'plugin/notes/notes.js', async: true },
+                // Remote control your reveal.js presentation using a touch device
+                <?php echo $revealjs_remotes; ?>
+                // MathJax
+                { src: 'plugin/math/math.js', async: true },
+                // audio-slideshow
+                <?php echo $revealjs_audioslideshow; ?>
+                ],
+            });
+            // Save slide show position on each slide change
+            Reveal.addEventListener( 'slidechanged', function() {
+                docCookies.setItem('<?php echo $cm->id ?>', document.URL, 31536e3); // Save cookies for 1 year
+            });
+            // If a position saved, go to it
+            if(docCookies.hasItem('<?php echo $cm->id ?>'))
+            {
+                //window.location.replace(docCookies.getItem('<?php echo $cm->id ?>'));
+            }
+        </script>
+    </body>
 </html>
-?>

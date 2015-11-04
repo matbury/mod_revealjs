@@ -25,9 +25,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$module->version   = 2014022800;       // The current module version (Date: YYYYMMDDXX)
+$module->version   = 2015103000;      // The current module version (Date: YYYYMMDDXX)
 $module->requires  = 2013050100;    // Requires this Moodle version
 $module->component = 'mod_revealjs';       // Full name of the plugin (used for diagnostics)
 $module->cron      = 0;
-$module->release   = 'v0.6.0';        // Human-readable version name
+$module->release   = 'v0.7.0';        // Human-readable version name
 $module->maturity = MATURITY_BETA;      // How stable the plugin is MATURITY_ALPHA, MATURITY_BETA, MATURITY_RC, MATURITY_STABLE

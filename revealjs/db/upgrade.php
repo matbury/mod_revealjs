@@ -51,21 +51,103 @@ function xmldb_revealjs_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
-
-    // Moodle v2.2.0 release upgrade line
-    // Put any upgrade step following this
-
-    // Moodle v2.3.0 release upgrade line
-    // Put any upgrade step following this
-
-
-    // Moodle v2.4.0 release upgrade line
-    // Put any upgrade step following this
-
-
-    // Moodle v2.5.0 release upgrade line.
-    // Put any upgrade step following this.
-
-
+    // Add new DB columns to support paramters in Reaveal.js 3.0
+    
+    if ($oldversion < 2015103000) {
+        
+        $table = new xmldb_table('revealjs');
+        
+        //remotes
+        $field = new xmldb_field('remotes');
+        $field->set_attributes(XMLDB_TYPE_CHAR, '6', null, null, null, 'false', 'mousewheel');
+        $dbman->add_field($table, $field);
+        //$result = $result && $dbman->add_field($table, $field);
+        $DB->set_field('revealjs', 'remotes', 'false');
+        
+        //audioslideshow
+        $field = new xmldb_field('audioslideshow');
+        $field->set_attributes(XMLDB_TYPE_CHAR, '6', null, null, null, 'false', 'mousewheel');
+        $dbman->add_field($table, $field);
+        $DB->set_field('revealjs', 'audioslideshow', 'false');
+        
+        //audioslideshowtime
+        $field = new xmldb_field('audioslideshowtime');
+        $field->set_attributes(XMLDB_TYPE_CHAR, '10', null, null, null, '5', 'mousewheel');
+        $dbman->add_field($table, $field);
+        $DB->set_field('revealjs', 'audioslideshowtime', '5');
+        
+        //autoslidestoppable
+        $field = new xmldb_field('autoslidestoppable');
+        $field->set_attributes(XMLDB_TYPE_CHAR, '6', null, null, null, 'true', 'mousewheel');
+        $dbman->add_field($table, $field);
+        $DB->set_field('revealjs', 'autoslidestoppable', 'true');
+        
+        //fragments
+        $field = new xmldb_field('fragments');
+        $field->set_attributes(XMLDB_TYPE_CHAR, '6', null, null, null, 'true', 'mousewheel');
+        $dbman->add_field($table, $field);
+        $DB->set_field('revealjs', 'fragments', 'true');
+        
+        //embedded
+        $field = new xmldb_field('embedded');
+        $field->set_attributes(XMLDB_TYPE_CHAR, '6', null, null, null, 'false', 'mousewheel');
+        $dbman->add_field($table, $field);
+        $DB->set_field('revealjs', 'embedded', 'false');
+        
+        //help
+        $field = new xmldb_field('help');
+        $field->set_attributes(XMLDB_TYPE_CHAR, '6', null, null, null, 'true', 'mousewheel');
+        $dbman->add_field($table, $field);
+        $DB->set_field('revealjs', 'help', 'true');
+        
+        //hideaddressbar
+        $field = new xmldb_field('hideaddressbar');
+        $field->set_attributes(XMLDB_TYPE_CHAR, '6', null, null, null, 'true', 'mousewheel');
+        $dbman->add_field($table, $field);
+        $DB->set_field('revealjs', 'hideaddressbar', 'true');
+        
+        //viewdistance
+        $field = new xmldb_field('viewdistance');
+        $field->set_attributes(XMLDB_TYPE_CHAR, '6', null, null, null, '3', 'mousewheel');
+        $dbman->add_field($table, $field);
+        $DB->set_field('revealjs', 'viewdistance', '3');
+        
+        //parallaxbackgroundimage
+        $field = new xmldb_field('parallaxbackgroundimage');
+        $field->set_attributes(XMLDB_TYPE_CHAR, '255', null, null, null, '', 'mousewheel');
+        $dbman->add_field($table, $field);
+        
+        //parallaxbackgroundsize
+        $field = new xmldb_field('parallaxbackgroundsize');
+        $field->set_attributes(XMLDB_TYPE_CHAR, '20', null, null, null, '1280px 720px', 'mousewheel');
+        $dbman->add_field($table, $field);
+        $DB->set_field('revealjs', 'parallaxbackgroundsize', '1280px 720px');
+        
+        //parallaxbackgroundhorizontal
+        $field = new xmldb_field('parallaxbackgroundhorizontal');
+        $field->set_attributes(XMLDB_TYPE_CHAR, '6', null, null, null, '100', 'mousewheel');
+        $dbman->add_field($table, $field);
+        $DB->set_field('revealjs', 'parallaxbackgroundhorizontal', '100');
+        
+        //parallaxbackgroundvertical
+        $field = new xmldb_field('parallaxbackgroundvertical');
+        $field->set_attributes(XMLDB_TYPE_CHAR, '6', null, null, null, '100', 'mousewheel');
+        $dbman->add_field($table, $field);
+        $DB->set_field('revealjs', 'parallaxbackgroundvertical', '100');
+        
+        //previewlinks
+        $field = new xmldb_field('previewlinks');
+        $field->set_attributes(XMLDB_TYPE_CHAR, '6', null, null, null, 'false', 'mousewheel');
+        $dbman->add_field($table, $field);
+        $DB->set_field('revealjs', 'previewlinks', 'false');
+        
+        //slidenumber
+        $field = new xmldb_field('slidenumber');
+        $field->set_attributes(XMLDB_TYPE_CHAR, '6', null, null, null, 'true', 'mousewheel');
+        $dbman->add_field($table, $field);
+        $DB->set_field('revealjs', 'slidenumber', 'true');
+        
+    }
+    
     return true;
 }

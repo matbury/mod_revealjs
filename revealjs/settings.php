@@ -19,7 +19,7 @@
  * Page module admin settings and defaults
  *
  * @package    mod
- * @subpackage revealjs
+ * @subpackage presentation
  * @copyright  2013 Matt Bury <matt@matbury.com>  {@link http://matbury.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -40,7 +40,7 @@ if ($ADMIN->fulltree) {
     
     $settings->add(new admin_setting_configtext('revealjs_data_dir', get_string('data_dir', 'revealjs'), get_string('data_dir_explain', 'revealjs').' '.$revealjs_data_dir, $CFG->dataroot.'/repository/revealjs/', PARAM_RAW, $revealjs_width));
     
-    $settings->add(new admin_setting_configtext('revealjs_data_url', get_string('data_url', 'revealjs'), get_string('data_url_explain', 'revealjs'), $CFG->wwwroot.'/mod/revealjs/content.php/', PARAM_RAW, $revealjs_width));
+    $settings->add(new admin_setting_configtext('revealjs_data_url', get_string('data_url', 'revealjs'), get_string('data_url_explain', 'revealjs'), 'content.php/', PARAM_RAW, $revealjs_width));
     
     $settings->add(new admin_setting_configtext('revealjs_data_structure', get_string('data_structure', 'revealjs'), get_string('data_structure_explain', 'revealjs'), '_revealjs_/*/*/*.*', PARAM_RAW, $revealjs_width));
 
@@ -48,9 +48,9 @@ if ($ADMIN->fulltree) {
     $defaultdisplayoptions = array(RESOURCELIB_DISPLAY_POPUP);
 
     //--- general settings -----------------------------------------------------------------------------------
-    $settings->add(new admin_setting_configcheckbox('revealjs/requiremodintro', get_string('requiremodintro', 'admin'), get_string('configrequiremodintro', 'admin'), 1));
+    $settings->add(new admin_setting_configcheckbox('revealjs/requiremodintro', get_string('requiremodintro', 'admin'), ' ', 1));
     $settings->add(new admin_setting_configmultiselect('revealjs/displayoptions', get_string('displayoptions', 'revealjs'), get_string('configdisplayoptions', 'revealjs'), $defaultdisplayoptions, $displayoptions));
-    $settings->add(new admin_setting_configtext('revealjs_content_dir', get_string('contentdir', 'revealjs'), get_string('contentdirexplain', 'revealjs'), '/repository/revealjscontent', PARAM_RAW, 80));
+    $settings->add(new admin_setting_configtext('revealjs_content_dir', get_string('contentdir', 'revealjs'), get_string('contentdirexplain', 'revealjs'), '/repository/revealjs', PARAM_RAW, 80));
 
     //--- modedit defaults -----------------------------------------------------------------------------------
     $settings->add(new admin_setting_heading('revealjsmodeditdefaults', get_string('modeditdefaults', 'admin'), get_string('condifmodeditdefaults', 'admin')));
