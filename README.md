@@ -3,11 +3,11 @@ mod_revealjs
 
 Moodle 2.5+ resource module for displaying reveal.js HTML/CSS/JS presentations
 
-Demo in Moodle here: http://moodle.matbury.com/course/view.php?id=2
+Demo in Moodle here: https://matbury.com/moodle/course/view.php?id=2
 
 See reveal.js at: https://github.com/hakimel/reveal.js
 
-This file is part of Moodle - http://moodle.org/
+This file is part of Moodle - https://moodle.org/
 
 Moodle is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,10 +20,10 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-@copyright      2013 Matt Bury <matt@matbury.com>  {@link http://matbury.com}
-@license        http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+@copyright      2013 Matt Bury <matbury@gmail.com>  {@link https://matbury.com}
+@license        https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
 
 
 Presentation module (reveal.js)
@@ -59,4 +59,4 @@ There's an example presentation in `/revealjs/_revealjs_/matbury/sdl_learner/` t
 get you started
 
 For further information about installing activity modules in Moodle see:
-http://docs.moodle.org/25/en/Installing_add-ons
+https://docs.moodle.org/25/en/Installing_add-ons
