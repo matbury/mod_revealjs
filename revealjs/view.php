@@ -16,7 +16,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Reveal.js renders presentation main view
+ * Reveal.js renders revealjs main view
  *
  * @package    mod
  * @subpackage revealjs
@@ -51,73 +51,14 @@ require_course_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/revealjs:view', $context);
 
-// Trigger module viewed event.
-/*$event = \mod_revealjs\event\course_module_viewed::create(array(
-   'objectid' => $revealjs->id,
-   'context' => $context
-));
-$event->add_record_snapshot('course_modules', $cm);
-$event->add_record_snapshot('course', $course);
-$event->add_record_snapshot('revealjs', $revealjs);
-$event->trigger();*/
+// Completion and trigger events.
+revealjs_view($revealjs, $course, $cm, $context);
 
-// Update 'viewed' state if required by completion system
-require_once($CFG->libdir . '/completionlib.php');
-$completion = new completion_info($course);
-$completion->set_module_viewed($cm);
-
-/* Don't use Moodle's page renderer
- *  
-$PAGE->set_url('/mod/revealjs/view.php', array('id' => $cm->id));
-
-$options = empty($revealjs->displayoptions) ? array() : unserialize($revealjs->displayoptions);
-
-if ($inpopup and $revealjs->display == RESOURCELIB_DISPLAY_POPUP) {
-    $PAGE->set_pagelayout('popup');
-    $PAGE->set_title($course->shortname.': '.$revealjs->name);
-    if (!empty($options['printheading'])) {
-        $PAGE->set_heading($revealjs->name);
-    } else {
-        $PAGE->set_heading('');
-    }
-    echo $OUTPUT->header();
-
-} else {
-    $PAGE->set_title($course->shortname.': '.$revealjs->name);
-    $PAGE->set_heading($course->fullname);
-    $PAGE->set_activity_record($revealjs);
-    echo $OUTPUT->header();
-
-    if (!empty($options['printheading'])) {
-        echo $OUTPUT->heading(format_string($revealjs->name), 2, 'main', 'revealjsheading');
-    }
-}
-
-if (!empty($options['printintro'])) {
-    if (trim(strip_tags($revealjs->intro))) {
-        echo $OUTPUT->box_start('mod_introbox', 'revealjsintro');
-        echo format_module_intro('revealjs', $revealjs, $cm->id);
-        echo $OUTPUT->box_end();
-    }
-}
-
-$content = file_rewrite_pluginfile_urls($revealjs->content, 'pluginfile.php', $context->id, 'mod_revealjs', 'content', $revealjs->revision);
-$formatoptions = new stdClass;
-$formatoptions->noclean = true;
-$formatoptions->overflowdiv = true;
-$formatoptions->context = $context;
-$content = format_text($content, $revealjs->contentformat, $formatoptions);
-echo $content;
-echo $OUTPUT->box($content, "generalbox center clearfix");
-echo $OUTPUT->footer();
- * 
- */
-
-//
-$revealjs_back_close = '<a href="'.$CFG->wwwroot.'/course/view.php?id='.$course->id.'" title="'.get_string('saveandclose','revealjs').'">Save & Close</a>';
+// Either navigate to course page or close popup link
+$revealjs_back_close = '<a href="'.$CFG->wwwroot.'/course/view.php?id='.$course->id.'" title="'.get_string('saveandclose_title','revealjs').'">'.get_string('saveandclose','revealjs').'</a>';
 if($inpopup === 1)
 {
-    $revealjs_back_close = '<a href="javascript:window.close();" title="'.get_string('saveandclose','revealjs').'">Save & Close</a>';
+    $revealjs_back_close = '<a href="javascript:window.close();" title="'.get_string('saveandclose_title','revealjs').'">'.get_string('saveandclose','revealjs').'</a>';
 }
 
 // Enable remote control?
@@ -132,9 +73,24 @@ $revealjs_audioslideshow = '';
 $revealjs_transcript = '';
 if($revealjs->audioslideshow === 'true')
 {
-    $revealjs_audioslideshow = '{ src: \'plugin/audio-slideshow/slideshow-recorder.js\', condition: function( ) { return !!document.body.classList; } },	
+    $revealjs_audioslideshow = '{ src: \'plugin/audio-slideshow/slideshow-recorder.js\', condition: function( ) { return !!document.body.classList; } },
                 { src: \'plugin/audio-slideshow/audio-slideshow.js\', condition: function( ) { return !!document.body.classList; } },';
-    $revealjs_transcript = '<a href="javascript: showHide();" title="'.get_string('showhidetranscript','revealjs').'">Transcript</a>';
+    $revealjs_transcript = '<a href="javascript: showHide();" title="'.get_string('showhidetranscript','revealjs').'"><transcript>'.get_string('hidetranscript','revealjs').' </transcript>'.get_string('toggletranscript','revealjs').'</a>';
+}
+
+// Enable menu plugin?
+$revealjs_menu = '';
+if($revealjs->showmenu === 'true')
+{
+    $revealjs_menu = '{ src: \'plugin/menu/menu.js\' },';
+}
+
+//Enable chart plugin?
+$revealjs_charts = '';
+if($revealjs->showcharts === 'true')
+{
+    $revealjs_charts = '{ src: \'plugin/chart/Chart.min.js\' },
+                        { src: \'plugin/chart/csv2chart.js\' },';
 }
 
 //background image used?
@@ -163,6 +119,7 @@ $revealjs->presentation = str_replace('_revealjs_/', $CFG->wwwroot.'/mod/revealj
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
         <link rel="stylesheet" href="css/reveal.css">
         <link rel="stylesheet" href="css/theme/<?php echo $revealjs->theme; ?>" id="theme">
+        <link rel="stylesheet" href="plugin/accessibility/helper.css">
         <!-- Code syntax highlighting -->
         <link rel="stylesheet" href="lib/css/zenburn.css">
         <link href="css/menu.css" rel="stylesheet" type="text/css"/>
@@ -203,7 +160,7 @@ $revealjs->presentation = str_replace('_revealjs_/', $CFG->wwwroot.'/mod/revealj
         <![endif]-->
     </head>
     <body>
-        <div class="topbar"><?php echo $revealjs_back_close .' '. $revealjs_transcript ?> <a href="javascript:Reveal.toggleOverview();" title="<?php get_string('toggleoverview','revealjs'); ?>">Overview</a></div>
+        <div class="topbar"><?php echo $revealjs_back_close .' '. $revealjs_transcript ?> <a href="javascript:Reveal.toggleOverview();" title="<?php get_string('toggleoverview','revealjs'); ?>"><?php get_string('overview','revealjs'); ?></a></div>
     
         <div class="reveal">
             <!-- Any section element inside of this container is displayed as a slide -->
@@ -253,11 +210,27 @@ $revealjs->presentation = str_replace('_revealjs_/', $CFG->wwwroot.'/mod/revealj
                 audioSuffix: '.mp3',
                 audioDefaultDuration: <?php echo $revealjs->audioslideshowtime; ?>,
                 audioPlayerOpacity: 0.2,
+                
+                menu: {
+                    // Documentation and source code is at: https://github.com/denehyg/reveal.js-menu
+                    side: 'left', // 'left' or 'right'
+                    numbers: false, // Numbered list instead of bullet list,  true or false 
+                    hideMissingTitles: false, // Hide slides without titles
+                    markers: true, // Mark current position on slideshow menu
+                    custom: false, // Add custom items to menu
+                    themes: false, // Don't allow switching themes
+                    transitions: false, // Don't allow switching transitions
+                    openButton: true,
+                    openSlideNumber: true,
+                    keyboard: <?php echo $revealjs->keyboard; ?> // Allow keyboard navigation
+                },
 
             // Optional reveal.js plugins
             dependencies: [
                 // Cross-browser shim that fully implements classList - https://github.com/eligrey/classList.js/
                 { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                // Accessibility https://github.com/marcysutton/reveal-a11y
+                { src: 'plugin/accessibility/helper.js', async: true, condition: function() { return !!document.body.classList; } },
                 // Interpret Markdown in <section> elements
                 { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
                 { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
@@ -265,14 +238,18 @@ $revealjs->presentation = str_replace('_revealjs_/', $CFG->wwwroot.'/mod/revealj
                 { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
                 // Zoom in and out with Alt+click
                 { src: 'plugin/zoom-js/zoom.js', async: true },
+                // menu
+                <?php echo $revealjs_menu; ?>
                 // Speaker notes
                 { src: 'plugin/notes/notes.js', async: true },
                 // Remote control your reveal.js presentation using a touch device
                 <?php echo $revealjs_remotes; ?>
-                // MathJax
-                { src: 'plugin/math/math.js', async: true },
                 // audio-slideshow
                 <?php echo $revealjs_audioslideshow; ?>
+                // chart
+                <?php echo $revealjs_charts; ?>
+                // math (MathJax)
+                { src: 'plugin/math/math.js', async: true },
                 ],
             });
             // Save slide show position on each slide change
@@ -282,7 +259,7 @@ $revealjs->presentation = str_replace('_revealjs_/', $CFG->wwwroot.'/mod/revealj
             // If a position saved, go to it
             if(docCookies.hasItem('<?php echo $cm->id ?>'))
             {
-                //window.location.replace(docCookies.getItem('<?php echo $cm->id ?>'));
+                window.location.replace(docCookies.getItem('<?php echo $cm->id ?>'));
             }
         </script>
     </body>

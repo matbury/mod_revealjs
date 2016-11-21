@@ -212,6 +212,16 @@ class mod_revealjs_mod_form extends moodleform_mod {
         $mform->setDefault('hideaddressbar', 'true');
         $mform->addHelpButton('hideaddressbar', 'hideaddressbar', 'revealjs');
         
+        //showmenu
+        $mform->addElement('select', 'showmenu', get_string('showmenu', 'revealjs'), $revealjs_true_false);
+        $mform->setDefault('showmenu', 'false');
+        $mform->addHelpButton('showmenu', 'showmenu', 'revealjs');
+        
+        //showcharts
+        $mform->addElement('select', 'showcharts', get_string('showcharts', 'revealjs'), $revealjs_true_false);
+        $mform->setDefault('showcharts', 'false');
+        $mform->addHelpButton('showcharts', 'showcharts', 'revealjs');
+        
         //previewlinks
         $mform->addElement('select', 'previewlinks', get_string('previewlinks', 'revealjs'), $revealjs_true_false);
         $mform->setDefault('previewlinks', 'false');

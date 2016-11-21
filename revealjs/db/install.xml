@@ -38,6 +38,8 @@
         <FIELD NAME="audioslideshow" TYPE="char" LENGTH="6" NOTNULL="false" DEFAULT="false" SEQUENCE="false"/>
         <FIELD NAME="audioslideshowtime" TYPE="char" LENGTH="10" NOTNULL="false" DEFAULT="5" SEQUENCE="false"/>
         <FIELD NAME="hideaddressbar" TYPE="char" LENGTH="6" NOTNULL="false" DEFAULT="true" SEQUENCE="false"/>
+        <FIELD NAME="showmenu" TYPE="char" LENGTH="6" NOTNULL="false" DEFAULT="false" SEQUENCE="false"/>
+        <FIELD NAME="showcharts" TYPE="char" LENGTH="6" NOTNULL="false" DEFAULT="false" SEQUENCE="false"/>
         <FIELD NAME="previewlinks" TYPE="char" LENGTH="6" NOTNULL="false" DEFAULT="false" SEQUENCE="false"/>
         <FIELD NAME="transition" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="default" SEQUENCE="false"/>
         <FIELD NAME="transitionspeed" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="default" SEQUENCE="false"/>

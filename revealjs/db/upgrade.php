@@ -149,5 +149,28 @@ function xmldb_revealjs_upgrade($oldversion) {
         
     }
     
+    if ($oldversion < 2016010300) {
+        
+        $table = new xmldb_table('revealjs');
+        
+        //showmenu
+        $field = new xmldb_field('showmenu');
+        $field->set_attributes(XMLDB_TYPE_CHAR, '6', null, null, null, 'false', 'mousewheel');
+        $dbman->add_field($table, $field);
+        $DB->set_field('revealjs', 'showmenu', 'false');
+        
+    }
+    
+    if ($oldversion < 2016010500) {
+        
+        $table = new xmldb_table('revealjs');
+        
+        //showmenu
+        $field = new xmldb_field('showcharts');
+        $field->set_attributes(XMLDB_TYPE_CHAR, '6', null, null, null, 'false', 'mousewheel');
+        $dbman->add_field($table, $field);
+        $DB->set_field('revealjs', 'showcharts', 'false');
+    }
+    
     return true;
 }

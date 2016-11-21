@@ -15,42 +15,39 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    mod
- * @subpackage revealjs
- * @copyright  2015 Matt Bury <matt@matbury.com>  {@link http://matbury.com}
+ * The mod_revealjs course module viewed event.
+ *
+ * @package    mod_revealjs
+ * @copyright  2016 Matt Bury <matbury@gmail.com>  {@link http://matbury.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace mod_revealjs\event;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * The mod_page course module viewed event class.
+ * The mod_revealjs course module viewed event class.
  *
- * @package    mod
- * @subpackage revealjs
+ * @package    mod_revealjs
  * @since      Moodle 2.6
- * @copyright  2015 Matt Bury <matt@matbury.com>  {@link http://matbury.com}
+ * @copyright  2016 Matt Bury <matbury@gmail.com>  {@link http://matbury.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class course_module_viewed extends \core\event\course_module_viewed {
 
     /**
      * Init method.
+     * 
+     * @return void
      */
     protected function init() {
+        $this->data['objecttable'] = 'revealjs';
         $this->data['crud'] = 'r';
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
-        $this->data['objecttable'] = 'revealjs';
     }
 
-    /**
-     * Get URL related to the action
-     *
-     * @return \moodle_url
-     */
-    //public function get_url() {
-        //return new \moodle_url('/mod/revealjs/view.php', array('f' => $this->objectid));
-    //}
+    public static function get_objectid_mapping() {
+        return array('db' => 'revealjs', 'restore' => 'revealjs');
+    }
 }
-

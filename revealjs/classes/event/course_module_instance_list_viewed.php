@@ -15,22 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    mod
- * @subpackage revealjs
- * @copyright  2015 Matt Bury <matt@matbury.com>  {@link http://matbury.com}
+ * The mod_revealjs instance list viewed event.
+ *
+ * @package    mod_revealjs
+ * @copyright  2016 Matt Bury <matbury@gmail.com>  {@link http://matbury.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace mod_revealjs\event;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
  * The mod_revealjs instance list viewed event class.
  *
- * @package    mod
- * @subpackage revealjs
+ * @package    mod_revealjs
  * @since      Moodle 2.7
- * @copyright  2015 Matt Bury <matt@matbury.com>  {@link http://matbury.com}
+ * @copyright  2016 Matt Bury <matbury@gmail.com>  {@link http://matbury.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class course_module_instance_list_viewed extends \core\event\course_module_instance_list_viewed {

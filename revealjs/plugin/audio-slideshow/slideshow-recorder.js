@@ -4,7 +4,7 @@
 ** The slide show recorder is a plugin for reveal.js allowing to
 ** record audio for a slide deck. 
 **
-** Version: 0.2
+** Version: 0.3
 ** 
 ** License: MIT license (see LICENSE.md)
 **
@@ -194,15 +194,95 @@ var Recorder = {
 	document.body.appendChild(a);	
 	try {
 	  a.download = "audio.zip";
-	  a.href = window.URL.createObjectURL( this.zip.generate( {type:"blob"} ) );
+	  var blob = this.zip.generate( {type:"blob"} );
+	  a.href = window.URL.createObjectURL( blob );
   	} catch( error ) {
  	  a.innerHTML += " (" + error + ")";
  	}
 	a.click();
 	document.body.removeChild(a);
+    },
+
+    fetchTTS : function fetchTTS() {
+	function fetchAudio( audioSources ) {
+		if ( audioSources.length ) {
+			// take first audio from array
+			var audioSource = audioSources.shift();
+			var progress = Math.round(100 * ( progressBar.getAttribute( 'data-max' ) - audioSources.length ) / progressBar.getAttribute( 'data-max' ) );  
+			progressBar.setAttribute( 'style', "width: " + progress + "%" );
+			var filename = audioSource.getAttribute('data-tts');
+	 		var xhr = new XMLHttpRequest();
+			xhr.open('GET', audioSource.src, true);
+	 		xhr.responseType = 'blob';
+ 			xhr.onload = function() {
+   				if (xhr.readyState === 4 && xhr.status === 200) {
+	      				var blobURL = window.URL.createObjectURL(xhr.response);
+					filename += '.' + xhr.response.type.split( '/' ).pop().split( 'x-' ).pop();
+	      				// convert blob to binary string
+					var reader = new window.FileReader();
+					reader.readAsBinaryString(xhr.response); 
+					reader.onloadend = function() {
+						blobBinaryString = reader.result; 
+						// add blob to zip
+						Recorder.zip.file( filename, blobBinaryString, { binary: true } );
+						// fetch next audio file
+						fetchAudio( audioSources );
+					}
+	   			}
+	 		}
+			xhr.onerror = function() {
+				alert ( "Unable to fetch TTS-files!" );
+				// remove progress bar
+				document.querySelector( ".reveal" ).removeChild( progressContainer );
+			}
+			try {
+				xhr.send(null); // fetch TTS
+				console.log("Fetch TTS for slide " + audioSource.getAttribute('data-tts'));
+			} catch ( error ) { 
+				alert ( "Unable to fetch TTS-files! " + error ); 
+				// remove progress bar
+				document.querySelector( ".reveal" ).removeChild( progressContainer );
+			}
+		}
+		else {
+			// generate zip for download
+			var blob = Recorder.zip.generate( {type:"blob"} );
+			var a = document.createElement('a');
+			document.body.appendChild(a);	
+			try {
+				a.download = "audio.zip";
+				a.href = window.URL.createObjectURL( blob );
+			} catch( error ) {
+				a.innerHTML += " (" + error + ")";
+ 			}
+			a.click();
+			document.body.removeChild(a);
+			// remove progress bar
+			document.querySelector( ".reveal" ).removeChild( progressContainer );
+		}
+	}
+
+	var TTS = document.querySelectorAll('audio>source[data-tts]');
+	if ( TTS.length ) {
+		// show progress bar
+		var progressContainer =  document.createElement( 'div' );
+		progressContainer.className = "progress";
+		progressContainer.setAttribute( 'style', "display: block; top: 0; bottom: auto; height: 12px;" );
+		var progressBar =  document.createElement( 'span' );
+		progressBar.setAttribute( 'style', "width: 0%;" );
+		progressBar.setAttribute( 'data-max', TTS.length );
+		progressContainer.appendChild( progressBar );
+		document.querySelector( ".reveal" ).appendChild( progressContainer );
+
+		fetchAudio( Array.prototype.slice.call(TTS) );
+	}
+	else {
+		alert("Either there is no audio to fetch from the text to speech generator or all audio files are already provided.");
+	}
     }
 
 };
+
 
 (function(){
 

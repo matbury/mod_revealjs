@@ -16,7 +16,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Private presentation module utility functions
+ * Private revealjs module utility functions
  *
  * @package    mod
  * @subpackage revealjs

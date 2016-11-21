@@ -19,7 +19,7 @@
  * Page module admin settings and defaults
  *
  * @package    mod
- * @subpackage presentation
+ * @subpackage revealjs
  * @copyright  2013 Matt Bury <matt@matbury.com>  {@link http://matbury.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -38,26 +38,89 @@ if ($ADMIN->fulltree) {
         $revealjs_data_dir = revealjs_rename_dir();
     }
     
-    $settings->add(new admin_setting_configtext('revealjs_data_dir', get_string('data_dir', 'revealjs'), get_string('data_dir_explain', 'revealjs').' '.$revealjs_data_dir, $CFG->dataroot.'/repository/revealjs/', PARAM_RAW, $revealjs_width));
+    // Server path to where all presentation files are stored, usually in /moodledata/repository/revealjs
+    $settings->add(new admin_setting_configtext(
+            'revealjs_data_dir', 
+            get_string('data_dir', 'revealjs'), 
+            get_string('data_dir_explain', 'revealjs').' '.$revealjs_data_dir, 
+            $CFG->dataroot.'/repository/revealjs/', 
+            PARAM_RAW, 
+            $revealjs_width));
     
-    $settings->add(new admin_setting_configtext('revealjs_data_url', get_string('data_url', 'revealjs'), get_string('data_url_explain', 'revealjs'), 'content.php/', PARAM_RAW, $revealjs_width));
+    // Location of content.php proxy script that accesses presentation files
+    $settings->add(new admin_setting_configtext(
+            'revealjs_data_url', 
+            get_string('data_url', 'revealjs'), 
+            get_string('data_url_explain', 'revealjs'), 
+            'content.php/', 
+            PARAM_RAW, 
+            $revealjs_width));
     
-    $settings->add(new admin_setting_configtext('revealjs_data_structure', get_string('data_structure', 'revealjs'), get_string('data_structure_explain', 'revealjs'), '_revealjs_/*/*/*.*', PARAM_RAW, $revealjs_width));
-
-    $displayoptions = resourcelib_get_displayoptions(array(RESOURCELIB_DISPLAY_OPEN, RESOURCELIB_DISPLAY_POPUP));
-    $defaultdisplayoptions = array(RESOURCELIB_DISPLAY_POPUP);
+    // Directory structure for presentation files. Where /revealjs/mod_form.php searches to find presentations
+    $settings->add(new admin_setting_configtext(
+            'revealjs_data_structure', 
+            get_string('data_structure', 'revealjs'), 
+            get_string('data_structure_explain', 'revealjs'), 
+            '_revealjs_/*/*/*.*', 
+            PARAM_RAW, 
+            $revealjs_width));
 
     //--- general settings -----------------------------------------------------------------------------------
-    $settings->add(new admin_setting_configcheckbox('revealjs/requiremodintro', get_string('requiremodintro', 'admin'), ' ', 1));
-    $settings->add(new admin_setting_configmultiselect('revealjs/displayoptions', get_string('displayoptions', 'revealjs'), get_string('configdisplayoptions', 'revealjs'), $defaultdisplayoptions, $displayoptions));
-    $settings->add(new admin_setting_configtext('revealjs_content_dir', get_string('contentdir', 'revealjs'), get_string('contentdirexplain', 'revealjs'), '/repository/revealjs', PARAM_RAW, 80));
+    $settings->add(new admin_setting_configcheckbox(
+            'revealjs/requiremodintro', 
+            get_string('requiremodintro', 'admin'), 
+            get_string('requiremodintro_desc', 'admin'), 
+            0));
+    
+    // Display presentations inline and/or in popup
+    $displayoptions = resourcelib_get_displayoptions(array(RESOURCELIB_DISPLAY_OPEN, RESOURCELIB_DISPLAY_POPUP));
+    $defaultdisplayoptions = array(RESOURCELIB_DISPLAY_OPEN, RESOURCELIB_DISPLAY_POPUP);
+    $settings->add(new admin_setting_configmultiselect(
+            'revealjs/displayoptions', 
+            get_string('displayoptions', 'revealjs'), 
+            get_string('configdisplayoptions', 'revealjs'), 
+            $defaultdisplayoptions, 
+            $displayoptions));
 
     //--- modedit defaults -----------------------------------------------------------------------------------
-    $settings->add(new admin_setting_heading('revealjsmodeditdefaults', get_string('modeditdefaults', 'admin'), get_string('condifmodeditdefaults', 'admin')));
+    
+    $settings->add(new admin_setting_heading(
+            'revealjsmodeditdefaults', 
+            get_string('modeditdefaults', 'admin'), 
+            get_string('condifmodeditdefaults', 'admin')));
 
-    $settings->add(new admin_setting_configcheckbox('revealjs/printheading', get_string('printheading', 'revealjs'), get_string('printheadingexplain', 'revealjs'), 1));
-    $settings->add(new admin_setting_configcheckbox('revealjs/printintro', get_string('printintro', 'revealjs'), get_string('printintroexplain', 'revealjs'), 0));
-    $settings->add(new admin_setting_configselect('revealjs/display', get_string('displayselect', 'revealjs'), get_string('displayselectexplain', 'revealjs'), RESOURCELIB_DISPLAY_POPUP, $displayoptions));
-    $settings->add(new admin_setting_configtext('revealjs/popupwidth', get_string('popupwidth', 'revealjs'), get_string('popupwidthexplain', 'revealjs'), 1280, PARAM_INT, 7));
-    $settings->add(new admin_setting_configtext('revealjs/popupheight', get_string('popupheight', 'revealjs'), get_string('popupheightexplain', 'revealjs'), 720, PARAM_INT, 7));
+    $settings->add(new admin_setting_configcheckbox(
+            'revealjs/printheading', 
+            get_string('printheading', 'revealjs'), 
+            get_string('printheadingexplain', 'revealjs'), 
+            1));
+    
+    $settings->add(new admin_setting_configcheckbox(
+            'revealjs/printintro', 
+            get_string('printintro', 'revealjs'), 
+            get_string('printintroexplain', 'revealjs'), 
+            0));
+    
+    $settings->add(new admin_setting_configselect(
+            'revealjs/display', 
+            get_string('displayselect', 'revealjs'), 
+            get_string('displayselectexplain', 'revealjs'), 
+            RESOURCELIB_DISPLAY_OPEN, 
+            $displayoptions));
+    
+    $settings->add(new admin_setting_configtext(
+            'revealjs/popupwidth', 
+            get_string('popupwidth', 'revealjs'), 
+            get_string('popupwidthexplain', 'revealjs'), 
+            1280, 
+            PARAM_INT, 
+            7));
+    
+    $settings->add(new admin_setting_configtext(
+            'revealjs/popupheight', 
+            get_string('popupheight', 'revealjs'), 
+            get_string('popupheightexplain', 'revealjs'), 
+            720, 
+            PARAM_INT, 
+            7));
 }
