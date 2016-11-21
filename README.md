@@ -7,7 +7,7 @@ Demo in Moodle here: https://matbury.com/moodle/course/view.php?id=2
 
 See reveal.js at: https://github.com/hakimel/reveal.js
 
-This file is part of Moodle - https://moodle.org/
+This package is a 3rd party plugin module for Moodle: https://moodle.org/
 
 Moodle is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ Installation
 3. Go to Administration > Site administration > Notifications
 4. Installation process will initiate (follow the on-screen instructions)
 
-During the installation process, the SWF Activity Module will attempt to move 
+During the installation process, the Presentation Module will attempt to move 
 the `/moodle/mod/revealjs/revealjs/` directory to `/moodledata/repository/`
 If this fails, you will have to move the directory and all its contents manually.
 
