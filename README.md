@@ -3,8 +3,6 @@ mod_revealjs
 
 Moodle 2.5+ resource module for displaying reveal.js HTML/CSS/JS presentations
 
-Demo in Moodle here: https://matbury.com/moodle/course/view.php?id=2
-
 See reveal.js at: https://github.com/hakimel/reveal.js
 
 This package is a 3rd party plugin module for Moodle: https://moodle.org/
